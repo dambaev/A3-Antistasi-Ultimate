@@ -69,7 +69,7 @@ private _barrel = "MetalBarrel_burning_F" createVehicle _barrelPosition;
 private _smokeEffect = "#particlesource" createVehicle _barrelPosition;
 _smokeEffect setParticleClass "BigDestructionSmoke";
 
-//due to esotheric BS which fn_scheduler is i have no other choice than sending setTraderStock 
+//due to esotheric BS which fn_scheduler is i have no other choice than sending setTraderStock
 //everywhere in hope that it will be delivered to heckin server (because clientId 2 does not work at all)
 [traderX] remoteExecCall ["SCRT_fnc_trader_setStockType", 0];
 [traderX] remoteExecCall ["SCRT_fnc_trader_addVehicleMarketAction", 0, true];
@@ -82,8 +82,8 @@ private _taskId = "TRADER" + str A3A_taskCount;
     [teamPlayer,civilian],
     _taskId,
     [
-        format [localize "STR_trader_quest_description", FactionGet(occ,"name"), _worldName, name traderX, FactionGet(occ,"name")],
-        localize "STR_trader_quest_header",
+        [ "STR_trader_quest_description", FactionGet(occ,"name"), _worldName, name traderX, FactionGet(occ,"name")],
+        [ "STR_trader_quest_header"],
         _traderMarkerVague
     ],
     _markerVaguePosition,
@@ -99,7 +99,7 @@ private _trigger = createTrigger ["EmptyDetector", _traderPosition];
 _trigger setTriggerArea [30, 30, 0, false];
 
 
-waitUntil { 
+waitUntil {
     sleep 1;
     private _conditionMet = false;
 

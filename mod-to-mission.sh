@@ -18,5 +18,6 @@ EOF
 git diff btr-base \
   | grep '+++' \
   | awk 'BEGIN{FS="b/"}{print $2}' \
+  | grep ".sqf"
   | awk "{system(\"./file-to-mission.sh \" \$1 \" \" \"$DST_DIR\")}"
 

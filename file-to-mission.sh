@@ -25,16 +25,16 @@ grep -F "#include \".." $DST_DIR/$FILE | while IFS= read -r INCLUDE; do
   echo "UPPER_LEVELS_COUNT = $UPPER_LEVELS_COUNT"
   RELATIVE_ROOT=$RAW_ROOT
   for LEVEL in $(seq 2 $UPPER_LEVELS_COUNT); do
-    echo sed -i 's=#include "..\\=#include "=g' $DST_DIR/$FILE
-    sed -i 's=#include "..\\=#include "=g' $DST_DIR/$FILE
+    echo sed -i 's=#include "\.\.\\=#include "=' $DST_DIR/$FILE
+    sed -i 's=#include "\.\.\\=#include "=' $DST_DIR/$FILE
     echo "RELATIVE_ROOT=$(dirname $RELATIVE_ROOT)"
     RELATIVE_ROOT=$(dirname $RELATIVE_ROOT)
   done
   echo RELATIVE_ROOT=$(dirname $RELATIVE_ROOT)
   RELATIVE_ROOT=$(dirname $RELATIVE_ROOT)
   INCLUDE_ROOT="\\\\x\\\\${RELATIVE_ROOT//\//\\\\}"
-  echo sed -i "s=#include \"..=#include \"$INCLUDE_ROOT=g" $DST_DIR/$FILE
-  sed -i "s=#include \"..=#include \"$INCLUDE_ROOT=g" $DST_DIR/$FILE
+  echo sed -i "s=#include \"\.\.=#include \"$INCLUDE_ROOT=" $DST_DIR/$FILE
+  sed -i "s=#include \"\.\.=#include \"$INCLUDE_ROOT=" $DST_DIR/$FILE
 done
 
 # sed -i "s=#include \"..=#include \"$INCLUDE_ROOT\\\\..=g" $DST_DIR/$FILE

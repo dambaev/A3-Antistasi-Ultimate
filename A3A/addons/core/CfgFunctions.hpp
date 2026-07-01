@@ -158,6 +158,7 @@ class CfgFunctions
             class arePositionsConnected {};
             class joinMultipleGroups {};
             class localizar {};
+            class localize_format_taskSetDescription {};
             class lockStatic {};
             class logPerformance {};
             class manageFlagAccess {};
@@ -869,7 +870,7 @@ class CfgFunctions
             class remainingFuel {};
             class rotateItem {};
         };
-        
+
         class reload_repack_turret_magazines {
             file = QPATHTOFOLDER(Scripts\RRTurretMagazines\scripts);
             //class postInit {};

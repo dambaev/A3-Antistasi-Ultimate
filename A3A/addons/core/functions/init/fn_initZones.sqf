@@ -159,9 +159,11 @@ if (!_hardCodedAntennas) then {
                 if( (!isNil { _killer}) && ( !isNull(_killer)) ) then {
                   if( isPlayer _killer && side _killer == independent) then {
                     [ 5000] remoteExec [ "A3A_fnc_resourcesPlayer", _killer];
-                  } else {
-                    [ 0, 5000] call A3A_fnc_resourcesFIA;
                   };
+                  if( (!isNil {theBoss}) && (!isNull theBoss)) then {
+                    [ 1000] remoteExec [ "A3A_fnc_resourcesPlayer", theBoss];
+                  };
+                  [ 0, 5000] call A3A_fnc_resourcesFIA;
                   private _any_occ_group = allGroups select {
                          (count ( (units _x) select { [ _x ] call A3A_fnc_canFight } ) > 0)
                       && (side _x == Occupants)
@@ -225,9 +227,11 @@ if (count _posAntennas > 0) then {
             if( (!isNil { _killer}) && ( !isNull(_killer)) ) then {
               if( isPlayer _killer && side _killer == independent) then {
                 [ 5000] remoteExec [ "A3A_fnc_resourcesPlayer", _killer];
-              } else {
-                [ 0, 5000] call A3A_fnc_resourcesFIA;
               };
+              if( (!isNil {theBoss}) && (!isNull theBoss)) then {
+                [ 1000] remoteExec [ "A3A_fnc_resourcesPlayer", theBoss];
+              };
+              [ 0, 5000] call A3A_fnc_resourcesFIA;
               private _any_occ_group = allGroups select {
                      (count ( (units _x) select { [ _x ] call A3A_fnc_canFight } ) > 0)
                   && (side _x == Occupants)

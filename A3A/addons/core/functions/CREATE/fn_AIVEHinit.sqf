@@ -193,22 +193,19 @@ if (_side == Invaders || _side == Occupants) then {
           (_typeX in OccAndInv("vehiclesTrucks"))
           or (_typeX in OccAndInv("vehiclesCargoTrucks"))
           or (_typeX in OccAndInv("vehiclesMilitiaTrucks"))
-          )
       ) exitWith {750};
       if (
           (_typeX in OccAndInv("vehiclesLightAPCs"))
           or (_typeX in OccAndInv("vehiclesAmmoTrucks"))
           or (_typeX in OccAndInv("vehiclesRepairTrucks"))
           or (_typeX in OccAndInv("vehiclesFuelTrucks"))
-          or (_typeX in OccAndInv("vehiclesMedical")
-          )
+          or (_typeX in OccAndInv("vehiclesMedical"))
       ) exitWith {1500};
       if (_typeX in (OccAndInv("vehiclesHelisLight"))) exitWith {3000};
       if (
           (_typeX in OccAndInv("vehiclesAPCs"))
           || (_typeX in OccAndInv("vehiclesIFVs"))
           || (_typeX in OccAndInv("vehiclesHelisLightAttack"))
-          )
       ) exitWith {2500};
       if (_typeX in OccAndInv("vehiclesLightTanks")) exitWith {3500};
       if (

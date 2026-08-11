@@ -117,9 +117,9 @@ if ((_veh isKindOf  "LandVehicle") || (_veh isKindOf  "Ship")) then {
 	private _staticVehInit = {
 		waitUntil { sleep 0.1; !isNil "serverInitDone" };
 		params ["_veh", "_flagAction"];
-		
+
 		[_veh, _flagAction] remoteExec ["A3A_fnc_flagAction", [teamPlayer, civilian], _veh];
-		
+
 		if !(locked _veh < 2) exitWith {};
 		private _isUAV = unitIsUAV _veh; // ! HR Garage force-crews all rebel UAVs, so call unlockStatic to update staticsToFlip and available vehicle actions appropriately
 		private _saved = _veh in staticsToSave;
@@ -146,7 +146,7 @@ if ((_veh isKindOf  "LandVehicle") || (_veh isKindOf  "Ship")) then {
 
 if (_side == civilian) then {
 	_veh addEventHandler ["HandleDamage",{if (((_this select 1) find "wheel" != -1) and (_this select 4=="") and (!isPlayer driver (_this select 0))) then {0;} else {(_this select 2);};}];
-	
+
 	if ((_veh isKindOf "Air")) exitWith {};
 
 	_veh addEventHandler ["HandleDamage", {
@@ -178,6 +178,61 @@ if (_side == Invaders || _side == Occupants) then {
 		nil;
 	}];
 
+	_veh addEventHandler ["Killed", {
+		params ["_veh", "_killer"];
+		_veh removeEventHandler ["Killed", _thisEventHandler];
+    if( isNil {_veh} || isNull _veh) exitWith { nil};
+		if (_veh getVariable "ownerSide" != _veh getVariable "originalSide") exitWith { nil };
+
+		// Add 1/3 cost to recent casualties list on server
+    private _typeX = typeOf _veh;
+    private _vehCost = call {
+      if (
+          (_typeX in OccAndInv("vehiclesLight"))
+          or (_typeX in OccAndInv("vehiclesTrucks"))
+          or (_typeX in OccAndInv("vehiclesCargoTrucks"))
+          or (_typeX in OccAndInv("vehiclesMilitiaTrucks"))
+          or (_typeX in OccAndInv("vehiclesTruck"))
+      ) exitWith {750};
+      if (
+          (_typeX in OccAndInv("vehiclesBoats"))
+          or (_typeX in OccAndInv("vehiclesLightAPCs"))
+          or (_typeX in OccAndInv("vehiclesAmmoTrucks"))
+          or (_typeX in OccAndInv("vehiclesRepairTrucks"))
+          or (_typeX in OccAndInv("vehiclesFuelTrucks"))
+          or (_typeX in OccAndInv("vehiclesMedical"))
+      ) exitWith {1500};
+      if (_typeX in (OccAndInv("vehiclesHelisLight"))) exitWith {3000};
+      if (
+          (_typeX in OccAndInv("vehiclesAPCs"))
+          || (_typeX in OccAndInv("vehiclesIFVs"))
+          || (_typeX in OccAndInv("vehiclesHelisLightAttack"))
+          || (_typeX in OccAndInv("vehiclesTransportAir"))
+          || (_typeX in OccAndInv("vehiclesUAVs"))
+      ) exitWith {2500};
+      if (_typeX in OccAndInv("vehiclesLightTanks")) exitWith {3500};
+      if (
+          (_typeX in OccAndInv("vehiclesHelisAttack"))
+          or (_typeX in OccAndInv("vehiclesTanks"))
+          or (_typeX in OccAndInv("vehiclesAA"))
+          or (_typeX in OccAndInv("vehiclesArtillery"))
+      ) exitWith {6500};
+      if (_typeX in (OccAndInv("vehiclesPlanesCAS") + OccAndInv("vehiclesPlanesAA") + OccAndInv("vehiclesPlanesLargeAA") + OccAndInv("vehiclesPlanesLargeCAS"))) exitWith {7500};
+      if (_typeX in (OccAndInv("vehiclesPlanesGunship"))) exitWith {10000};
+      [_typeX] call A3A_fnc_vehiclePrice;
+    };
+    private _veh_cost = _vehCost / 3;
+		[ 0, _veh_cost] call A3A_fnc_resourcesFIA;
+    if( (!isNil {theBoss}) && (!isNull theBoss) ) then {
+		  [ _veh_cost] remoteExec[ "A3A_fnc_resourcesPlayer", theBoss];
+    };
+    if( (!isNil {_killer}) && (!isNull _killer) ) then {
+		  [ _veh_cost] remoteExec[ "A3A_fnc_resourcesPlayer", _killer];
+    };
+
+		nil;
+	}];
+
 	if (_veh isKindOf "Helicopter") then {
 		// Event handler to (usually) get the crew out after crippling damage
 		// Doesn't cover dead pilot / live co-pilot case, should eventually be handled by AI routines
@@ -200,7 +255,7 @@ if (_side == Invaders || _side == Occupants) then {
 		//it would be really annoying if on each missile launch support will be called
 		if (random 10 < tierWar + aggressionOccupants/10) then {
 			[_group, _source] spawn A3A_fnc_callForSupport;
-		}; 
+		};
     }];
 };
 
@@ -262,7 +317,7 @@ if(([_veh] call A3A_Logistics_fnc_getVehCapacity) > 1) then {
 		_cargo = _cargo select {typeOf _x isEqualTo FactionGet(reb, "lootCrate")};
 
 		{
-			_cargoItem setDamage 1; 
+			_cargoItem setDamage 1;
 			[_x] spawn {
 				params["_cargoItem"];
 				sleep 4;

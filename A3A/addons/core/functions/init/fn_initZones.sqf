@@ -155,6 +155,16 @@ if (!_hardCodedAntennas) then {
                 [_mrk] call A3A_fnc_mrkUpdate;
                 ["TaskSucceeded", ["", localize "STR_notifiers_radiotower_destroyed"]] remoteExec ["BIS_fnc_showNotification", teamPlayer];
                 ["TaskFailed", ["", localize "STR_notifiers_radiotower_destroyed"]] remoteExec ["BIS_fnc_showNotification", Occupants];
+                private _killer = _this select 1;
+                if( (!isNil { _killer}) && ( !isNull(_killer)) ) then {
+                  private _any_occ_group = allGroups select {
+                         (count ( (units _x) select { [ _x ] call A3A_fnc_canFight } ) > 0)
+                      && (side _x == Occupants)
+                    };
+                  if( count _any_occ_group > 0) then {
+                    [ _any_occ_group select 0, _killer ] spawn A3A_fnc_callForSupport;
+                  };
+                };
             }
         ];
     };
@@ -206,6 +216,16 @@ if (count _posAntennas > 0) then {
                         [_mrk] call A3A_fnc_mrkUpdate;
                         ["TaskSucceeded", ["", localize "STR_notifiers_radiotower_destroyed"]] remoteExec ["BIS_fnc_showNotification", teamPlayer];
 						["TaskFailed", ["", localize "STR_notifiers_radiotower_destroyed"]] remoteExec ["BIS_fnc_showNotification", Occupants];
+            private _killer = _this select 1;
+            if( (!isNil { _killer}) && ( !isNull(_killer)) ) then {
+              private _any_occ_group = allGroups select {
+                     (count ( (units _x) select { [ _x ] call A3A_fnc_canFight } ) > 0)
+                  && (side _x == Occupants)
+                };
+              if( count _any_occ_group > 0) then {
+                [ _any_occ_group select 0, _killer ] spawn A3A_fnc_callForSupport;
+              };
+            };
 					}
 				];
 			};
@@ -320,11 +340,11 @@ _milAdminPositions apply {
         private _markerName = _killed getVariable ["A3A_milAdminMarker", ""];
 
         [_killed, "DESTROY"] call SCRT_fnc_location_removeMilAdmin;
-        
+
         if (_markerName != "") then {
             destroyedSites pushBackUnique _markerName;
             publicVariable "destroyedSites";
-            
+
             [_markerName] call A3A_fnc_mrkUpdate;
         };
     }];

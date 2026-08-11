@@ -33,20 +33,30 @@ _antenna addEventHandler ["Killed", {
     params ["_antenna"];
     _antenna removeAllEventHandlers "Killed";
     {if ([antennas,_x] call BIS_fnc_nearestPosition == _antenna) then {[_x,false] spawn A3A_fnc_blackout}} forEach citiesX;
-    
+
     private _mrk = [mrkAntennas, _antenna] call BIS_fnc_nearestPosition;
     antennas = antennas - [_antenna];
     antennasDead pushBack _antenna;
 
     _mrk setMarkerType "A3AU_radiotower_dead_mrk";
-    
-    publicVariable "antennas"; 
-    publicVariable "antennasDead"; 
-    
+
+    publicVariable "antennas";
+    publicVariable "antennasDead";
+
     // Force UI update to show the "(Destroyed)" suffix again
     [_mrk] call A3A_fnc_mrkUpdate;
-    
+
     ["TaskSucceeded",["", localize "STR_notifiers_radiotower_destroyed"]] remoteExec ["BIS_fnc_showNotification",teamPlayer];
     ["TaskFailed",["", localize "STR_notifiers_radiotower_destroyed"]] remoteExec ["BIS_fnc_showNotification",Occupants];
+  private _killer = _this select 1;
+  if( (!isNil { _killer}) && ( !isNull(_killer)) ) then {
+    private _any_occ_group = allGroups select {
+           (count ( (units _x) select { [ _x ] call A3A_fnc_canFight } ) > 0)
+        && (side _x == Occupants)
+      };
+    if( count _any_occ_group > 0) then {
+      [ _any_occ_group select 0, _killer ] spawn A3A_fnc_callForSupport;
+    };
+  };
 }];
 

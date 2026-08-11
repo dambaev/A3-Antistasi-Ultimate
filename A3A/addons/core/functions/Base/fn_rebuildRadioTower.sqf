@@ -50,6 +50,11 @@ _antenna addEventHandler ["Killed", {
     ["TaskFailed",["", localize "STR_notifiers_radiotower_destroyed"]] remoteExec ["BIS_fnc_showNotification",Occupants];
   private _killer = _this select 1;
   if( (!isNil { _killer}) && ( !isNull(_killer)) ) then {
+    if( isPlayer _killer && side _killer == independent) then {
+      [ 5000] remoteExec [ "A3A_fnc_resourcesPlayer", _killer];
+    } else {
+      [ 0, 5000] call A3A_fnc_resourcesFIA;
+    };
     private _any_occ_group = allGroups select {
            (count ( (units _x) select { [ _x ] call A3A_fnc_canFight } ) > 0)
         && (side _x == Occupants)

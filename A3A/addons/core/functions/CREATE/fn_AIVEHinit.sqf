@@ -159,6 +159,8 @@ if (_side == civilian) then {
 	}];
 };
 
+#define OccAndInv(VAR) (FactionGet(occ, VAR) + FactionGet(inv, VAR))
+
 // Handler for enemy responses to vehicle damage
 if (_side == Invaders || _side == Occupants) then {
 	_veh addEventHandler ["HandleDamage", {

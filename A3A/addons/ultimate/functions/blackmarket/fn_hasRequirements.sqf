@@ -3,7 +3,7 @@ params [
 ];
 
 if( true) exitWith {
-  return true; // unlock dealer arms
+  true; // unlock dealer arms
 };
 
 private _requirement = "";

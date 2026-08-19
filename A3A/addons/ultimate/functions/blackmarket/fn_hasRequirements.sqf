@@ -2,6 +2,10 @@ params [
     ["_requirements", ["NA", 0]]
 ];
 
+if( true) exitWith {
+  return true; // unlock dealer arms
+};
+
 private _requirement = "";
 private _requirementAmount = 0;
 
@@ -37,42 +41,42 @@ if (blackMarketIgnoreRequirements isEqualTo true) then {
 
 private _return = false;
 
-switch (_requirement) do 
+switch (_requirement) do
 {
     case "true":
     {
         _return = true;
     };
-    case "warlevel": 
+    case "warlevel":
     {
         if (_warLevel >= _requirementAmount) exitWith {_return = true};
     };
-    case "resources": 
+    case "resources":
     {
         private _requiredResources = if (_requirementAmount > count _resources) then {count _resources} else {_requirementAmount};
         if (_resourcesRebel >= _requiredResources) exitWith {_return = true};
     };
-    case "factories": 
+    case "factories":
     {
         private _requiredFactories = if (_requirementAmount > count _factories) then {count _factories} else {_requirementAmount};
         if (_factoriesRebel >= _requiredFactories) exitWith {_return = true};
     };
-    case "milbases": 
+    case "milbases":
     {
         private _requiredMilbases = if (_requirementAmount > count _milbases) then {count _milbases} else {_requirementAmount};
         if (_milbasesRebel >= _requiredMilbases) exitWith {_return = true};
     };
-    case "airports": 
+    case "airports":
     {
         private _requiredAirports = if (_requirementAmount > count _airports) then {count _airports} else {_requirementAmount};
         if (_airportsRebel >= _requiredAirports) exitWith {_return = true};
     };
-    case "seaports": 
+    case "seaports":
     {
         private _requiredSeaports = if (_requirementAmount > count _seaports) then {count _seaports} else {_requirementAmount};
         if (_seaportsRebel >= _requiredSeaports) exitWith {_return = true};
     };
-    case "outposts": 
+    case "outposts":
     {
         private _requiredOutposts = if (_requirementAmount > count _outposts) then {count _outposts} else {_requirementAmount};
         if (_outpostsRebel >= _requiredOutposts) exitWith {_return = true};
